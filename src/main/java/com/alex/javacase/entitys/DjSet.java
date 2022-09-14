@@ -1,9 +1,6 @@
 package com.alex.javacase.entitys;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.xml.crypto.Data;
 import java.util.Date;
 
@@ -17,6 +14,12 @@ public class DjSet {
     private Date startDate;
     private int duration;
 
+    @ManyToOne
+    @JoinColumn(name = "dj_id",nullable = true)
+    private Dj dj;
+
+
+
     protected DjSet() {}
 
     public DjSet(String name, Date startDate, int duration){
@@ -24,6 +27,7 @@ public class DjSet {
         this.name = name;
         this.startDate = startDate;
         this.duration = duration;
+
     }
 
     @Override
@@ -59,5 +63,9 @@ public class DjSet {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
+    }
+
+    public void setDj(Dj dj) {
+        this.dj = dj;
     }
 }

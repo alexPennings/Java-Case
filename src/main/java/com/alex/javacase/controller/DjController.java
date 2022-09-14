@@ -4,6 +4,7 @@ import com.alex.javacase.entitys.Dj;
 import com.alex.javacase.repository.DjRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +20,18 @@ public class DjController {
     @Autowired
     DjRepository djRepository;
 
+
+
     @GetMapping("/dj")
     public ArrayList<Dj> getAllDj(){
-
         return (ArrayList<Dj>) djRepository.findAll();
     }
 
     @GetMapping("/dj/specficdj")
-    public Dj getSpecificDjById(@RequestParam int id){
+    public ResponseEntity<Dj> getSpecificDjById(@RequestParam int id){
         Optional<Dj> optionalDj = djRepository.findById(id);
         //validate valid use of ternary
-        return djRepository.findById(id).isPresent() ? optionalDj.get() : new Dj("");
+        return djRepository.findById(id).isPresent() ? new ResponseEntity<Dj>(optionalDj.get(), HttpStatus.OK) : new ResponseEntity<Dj>(new Dj(""), HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/dj/byname")

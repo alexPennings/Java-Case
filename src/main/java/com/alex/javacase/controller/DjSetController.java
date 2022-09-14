@@ -5,15 +5,12 @@ import com.alex.javacase.entitys.DjSet;
 import com.alex.javacase.repository.DjRepository;
 import com.alex.javacase.repository.DjSetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,6 +19,9 @@ public class DjSetController {
 
     @Autowired
     DjSetRepository djSetRepository;
+    DjController djController;
+
+
 
     @GetMapping("/djset")
     public ArrayList<DjSet> getAllDjSet(){
@@ -36,11 +36,20 @@ public class DjSetController {
     }
 
     @PostMapping("/djset")
-    public ArrayList<DjSet> createDj(@RequestBody DjSet djSet){
-        DjSet newdjSet = new DjSet(djSet.getName(),djSet.getStartDate(),djSet.getDuration());
-        djSetRepository.save(newdjSet);
+    public ResponseEntity<DjSet> createDjset(@RequestParam int djId){
+        ResponseEntity<Dj> djResponseEntity = djController.getSpecificDjById(djId);
+         /* if(djResponseEntity.getStatusCode().value() == 200){
+              DjSet newdjSet = new DjSet(djSet.getName(),djSet.getStartDate(),djSet.getDuration());
+              Dj dj = djResponseEntity.getBody();
 
-        return (ArrayList<DjSet>) djSetRepository.findAll();
+              dj.addDjSet(newdjSet);
+              djSetRepository.save(newdjSet);
+            return new ResponseEntity<DjSet>(newdjSet,HttpStatus.OK);
+          }
+*/
+        return new ResponseEntity<DjSet>(new DjSet("dawd",new Date(0,0,0),90),HttpStatus.OK);
+
+
     }
 
     @DeleteMapping("/djset")
