@@ -1,6 +1,7 @@
 package com.alex.javacase.entitys;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.security.PublicKey;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public class Dj {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @NotBlank
     private String name;
 
 

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -19,7 +20,10 @@ public class DjSetController {
 
     @Autowired
     DjSetRepository djSetRepository;
-    DjController djController;
+    @Autowired
+    DjRepository djRepository;
+
+
 
 
 
@@ -36,20 +40,17 @@ public class DjSetController {
     }
 
     @PostMapping("/djset")
-    public ResponseEntity<DjSet> createDjset(@RequestParam int djId){
-        ResponseEntity<Dj> djResponseEntity = djController.getSpecificDjById(djId);
-         /* if(djResponseEntity.getStatusCode().value() == 200){
-              DjSet newdjSet = new DjSet(djSet.getName(),djSet.getStartDate(),djSet.getDuration());
-              Dj dj = djResponseEntity.getBody();
-
-              dj.addDjSet(newdjSet);
-              djSetRepository.save(newdjSet);
-            return new ResponseEntity<DjSet>(newdjSet,HttpStatus.OK);
-          }
-*/
-        return new ResponseEntity<DjSet>(new DjSet("dawd",new Date(0,0,0),90),HttpStatus.OK);
-
-
+    public ResponseEntity<DjSet> createDjset(@Valid @RequestBody DjSet receivedDjSet, @RequestParam int djId){
+        Optional<Dj> optionalDj = djRepository.findById(djId);
+        if(!optionalDj.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+            Dj dj = optionalDj.get();
+            DjSet djSet = new DjSet(receivedDjSet.getName(),receivedDjSet.getStartDate(),receivedDjSet.getDuration());
+            djSetRepository.save(djSet);
+            dj.addDjSet(djSet);
+            djRepository.save(dj);
+            return new ResponseEntity<>(djSet,HttpStatus.OK);
     }
 
     @DeleteMapping("/djset")
@@ -66,7 +67,7 @@ public class DjSetController {
     }
 
     @PutMapping("/djset")
-    public DjSet editDjSet(@RequestBody DjSet receivedDjSet){
+    public DjSet editDjSet(@Valid @RequestBody DjSet receivedDjSet){
         Optional<DjSet> optionalDjToEditSet = djSetRepository.findById(receivedDjSet.getId());
 
         if(optionalDjToEditSet.isPresent() == true){

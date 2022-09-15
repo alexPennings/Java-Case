@@ -1,6 +1,7 @@
 package com.alex.javacase.entitys;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.xml.crypto.Data;
 import java.util.Date;
 
@@ -10,8 +11,11 @@ public class DjSet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @NotBlank
     private String name;
+    @NotBlank
     private Date startDate;
+    @NotBlank
     private int duration;
 
     @ManyToOne
@@ -67,5 +71,9 @@ public class DjSet {
 
     public void setDj(Dj dj) {
         this.dj = dj;
+    }
+
+    public Dj getDj() {
+        return dj;
     }
 }

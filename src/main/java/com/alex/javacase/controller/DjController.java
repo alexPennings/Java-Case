@@ -3,13 +3,12 @@ package com.alex.javacase.controller;
 import com.alex.javacase.entitys.Dj;
 import com.alex.javacase.repository.DjRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,9 @@ public class DjController {
 
     @GetMapping("/dj/namelengthsix")
     public ArrayList<Dj> getDjByNameLengthSix(){
-        return  djRepository.findAll().stream().filter(dj -> dj.getName().length() > 6).collect(Collectors.toCollection(ArrayList::new));
+        return  djRepository.findAll().stream()
+                .filter(dj -> dj.getName().length() > 6)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @PostMapping("/dj")
@@ -53,7 +54,7 @@ public class DjController {
     }
 
     @DeleteMapping("/dj")
-    public ArrayList<Dj> deleteDj(@RequestParam int id){
+    public ArrayList<Dj> deleteDj(@Valid @RequestParam int id){
         Optional<Dj> optionalDjToDelete = djRepository.findById(id);
 
         if(optionalDjToDelete.isPresent() == true){
@@ -67,7 +68,7 @@ public class DjController {
     }
 
     @PutMapping("/dj")
-    public Dj editDj(@RequestBody Dj receivedDj){
+    public Dj editDj(@Valid @RequestBody Dj receivedDj){
         Optional<Dj> optionalDjToEdit = djRepository.findById(receivedDj.getId());
 
         if(optionalDjToEdit.isPresent() == true){
